@@ -499,9 +499,16 @@ async function bootFromPortal(){
     state.className=identity.className||state.className||'Primary 4';
     await loadTeacherCourseAccess(identity);
     english4CloudReady=true;
+    const enteredFromPortal=new URLSearchParams(window.location.search).get('from')==='english-portal';
+    if(enteredFromPortal){
+      quiz=null;
+      current={unit:null,lesson:null,tab:'overview'};
+      state.lastRoute={type:'dashboard'};
+    }
     save();
     startEnglish4TeacherRefresh(identity);
-    if(!restoreSavedRoute())render();
+    if(!enteredFromPortal&&!restoreSavedRoute())render();
+    if(enteredFromPortal)render();
   }catch(error){
     console.error('Portal session could not be restored.',error);
     returnToPortal();
